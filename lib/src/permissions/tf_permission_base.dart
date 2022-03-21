@@ -1,21 +1,22 @@
 import 'package:app_settings/app_settings.dart';
 
 abstract class TfPermissionBase {
-  bool check() {
-    if (isGranted() && isLimited()) {
+  Future<bool> check() async {
+    if (await isGranted() && await isLimited()) {
       return true;
     }
     return false;
   }
 
-  bool isLimited();
-  bool isGranted();
-  bool isPermanentlyDenied();
-  bool isRestricted();
+  Future<bool> isLimited();
+  Future<bool> isGranted();
+  Future<bool> isPermanentlyDenied();
+  Future<bool> isRestricted();
+  Future<bool> isDenied();
   //
   void request();
 
-  Future<void> _openSettings() async {
+  Future<void> openSettings() async {
     await AppSettings.openAppSettings(asAnotherTask: true);
   }
 }
