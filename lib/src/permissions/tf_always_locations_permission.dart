@@ -1,7 +1,7 @@
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tf_permissions/src/permissions/tf_permission_base.dart';
 
-class TfAlwaysLocationPermission extends TfPermissionBase{
+class TfAlwaysLocationPermission extends TfPermissionBase {
   @override
   Future<bool> isGranted() async {
     return await Permission.locationAlways.isGranted;
@@ -28,14 +28,11 @@ class TfAlwaysLocationPermission extends TfPermissionBase{
   }
 
   @override
-  void request() async {
-    if(await isPermanentlyDenied() || await isRestricted()){
+  Future<void> request() async {
+    if (await isPermanentlyDenied() || await isRestricted()) {
       await openSettings();
-    }else if(await isDenied()){
+    } else if (await isDenied()) {
       await Permission.locationAlways.request();
     }
   }
-
-
-
 }

@@ -14,7 +14,7 @@ abstract class TfPermissionBase {
   Future<bool> isRestricted();
   Future<bool> isDenied();
   //
-  void request();
+  Future<void> request();
 
   Future<void> openSettings() async {
     await AppSettings.openAppSettings(asAnotherTask: true);
