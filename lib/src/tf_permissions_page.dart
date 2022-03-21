@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tf_permissions/src/values/tf_permission_names.dart';
+import 'package:tf_permissions/src/models/tf_permission_requirement.dart';
 
 class TfPermissionsPage extends StatelessWidget {
   const TfPermissionsPage({
@@ -7,7 +7,7 @@ class TfPermissionsPage extends StatelessWidget {
     required this.permissionsRequired,
   }) : super(key: key);
 
-  final List<TfPermission> permissionsRequired;
+  final List<TfPermissionRequirement> permissionsRequired;
 
   @override
   Widget build(BuildContext context) {
