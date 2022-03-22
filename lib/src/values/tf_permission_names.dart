@@ -3,6 +3,7 @@ MODIFIED
 Source: https://pub.dev/packages/permission_handler
 */
 
+/// Enumerators for various permissions.
 enum TfPermissionName {
   /// Android: Calendar
   /// iOS: Calendar (Events)
