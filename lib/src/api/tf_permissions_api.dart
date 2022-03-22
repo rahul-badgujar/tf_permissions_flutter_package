@@ -1,7 +1,4 @@
-import 'package:tf_permissions/src/permissions/tf_always_locations_permission.dart';
-import 'package:tf_permissions/src/permissions/tf_camera_permission.dart';
-import 'package:tf_permissions/src/permissions/tf_permission_base.dart';
-import 'package:tf_permissions/src/permissions/tf_storage_permission.dart';
+import 'package:tf_permissions/src/permissions/tf_permissions.dart';
 
 import '../values/tf_permission_names.dart';
 

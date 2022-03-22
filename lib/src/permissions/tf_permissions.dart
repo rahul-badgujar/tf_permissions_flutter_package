@@ -70,3 +70,18 @@ abstract class TfPermissionBase {
     return (await permission.isDenied);
   }
 }
+
+/// Represents Camera Permission.
+class TfCameraPermission extends TfPermissionBase {
+  TfCameraPermission() : super(permission: Permission.camera);
+}
+
+/// Represents Storage Permission.
+class TfStoragePermission extends TfPermissionBase {
+  TfStoragePermission() : super(permission: Permission.storage);
+}
+
+/// Represents Location-Always-Allow Permission.
+class TfLocationAlwaysPermission extends TfPermissionBase {
+  TfLocationAlwaysPermission() : super(permission: Permission.locationAlways);
+}
