@@ -3,7 +3,7 @@ MODIFIED
 Source: https://pub.dev/packages/permission_handler
 */
 
-enum TfPermission {
+enum TfPermissionName {
   /// Android: Calendar
   /// iOS: Calendar (Events)
   calendar,

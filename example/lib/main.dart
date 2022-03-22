@@ -27,22 +27,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Permissions Page')),
-      body: SizedBox.expand(
-        child: TfPermissionsPage(
-          permissionsRequired: [
-            TfPermissionRequirement(
-              permission: TfPermission.camera,
-              whyRequirePermission:
-                  'Example reason why camera permission is required.',
-            ),
-            TfPermissionRequirement(
-              permission: TfPermission.storage,
-              whyRequirePermission:
-                  'Example reason why storage permission is required.',
-            ),
-          ],
-        ),
-      ),
+      body: SizedBox.expand(),
     );
   }
 }
