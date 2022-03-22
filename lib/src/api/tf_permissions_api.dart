@@ -3,7 +3,7 @@ import 'package:tf_permissions/src/permissions/tf_camera_permission.dart';
 import 'package:tf_permissions/src/permissions/tf_permission_base.dart';
 import 'package:tf_permissions/src/permissions/tf_storage_permission.dart';
 
-import '../src/values/tf_permission_names.dart';
+import '../values/tf_permission_names.dart';
 
 /// Request a list of permissions from OS.
 ///
