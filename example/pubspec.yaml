@@ -35,6 +35,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   tf_permissions:
     path: ../
+  tf_data_streamer:
+    git:
+      url: https://github.com/rahul-badgujar/tf_data_streamer_dart_package.git
+      ref: main
 
 dev_dependencies:
   flutter_test:

@@ -3,6 +3,8 @@ MODIFIED
 Source: https://pub.dev/packages/permission_handler
 */
 
+import 'package:permission_handler/permission_handler.dart';
+
 /// Defines the state of a [Permission].
 enum TfPermissionStatus {
   /// The user denied access to the requested feature.
@@ -26,6 +28,23 @@ enum TfPermissionStatus {
   /// still change the permission status in the settings.
   /// *Only supported on Android.*
   permanentlyDenied,
+}
+
+TfPermissionStatus getTfPermissionStatusFromPermissionStatus(
+    PermissionStatus status) {
+  switch (status) {
+    case PermissionStatus.denied:
+      return TfPermissionStatus.denied;
+
+    case PermissionStatus.granted:
+      return TfPermissionStatus.granted;
+    case PermissionStatus.restricted:
+      return TfPermissionStatus.restricted;
+    case PermissionStatus.limited:
+      return TfPermissionStatus.limited;
+    case PermissionStatus.permanentlyDenied:
+      return TfPermissionStatus.permanentlyDenied;
+  }
 }
 
 /* 

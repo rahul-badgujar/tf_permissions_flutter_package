@@ -1,5 +1,6 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:tf_permissions/src/values/tf_permission_status.dart';
 
 /// Base class representing a permission.
 abstract class TfPermissionBase {
@@ -9,11 +10,10 @@ abstract class TfPermissionBase {
   final Permission permission;
 
   /// Returns `true` if Permission is granted, otherwise returns `false`.
-  Future<bool> check() async {
-    if (await isGranted() && await isLimited()) {
-      return true;
-    }
-    return false;
+  Future<TfPermissionStatus> check() async {
+    final status = await permission.status;
+    final tfStatus = getTfPermissionStatusFromPermissionStatus(status);
+    return tfStatus;
   }
 
   /// Request for Permission. \
@@ -21,16 +21,20 @@ abstract class TfPermissionBase {
   ///
   /// NOTE: If the user has Permanently Denied or Restricted the Permission,
   /// User will be promoted with App Settings (or App Info) Page to allow the permission.
-  Future<bool> request() async {
+  Future<TfPermissionStatus> request() async {
     // CASE: Permission is already granted.
-    final isAlreadyGiven = await check();
-    if (isAlreadyGiven) return true;
+    final initialStatus = await check();
+    if (initialStatus == TfPermissionStatus.granted ||
+        initialStatus == TfPermissionStatus.limited) {
+      return initialStatus;
+    }
 
     // CASE: Permission is restricted by user by purpose.
     final shouldPromptSettings =
         (await isPermanentlyDenied()) || (await isRestricted());
     if (shouldPromptSettings) {
       await openSettings();
+      return TfPermissionStatus.permanentlyDenied;
     } else if (await isDenied()) {
       // CASE: Permission is just denied.
       await permission.request();

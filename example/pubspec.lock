@@ -205,6 +205,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.8"
+  tf_data_streamer:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: main
+      resolved-ref: "2991b3edc64b3244f66f89ef6038e85396acf4bd"
+      url: "https://github.com/rahul-badgujar/tf_data_streamer_dart_package.git"
+    source: git
+    version: "1.0.0"
   tf_permissions:
     dependency: "direct main"
     description:
