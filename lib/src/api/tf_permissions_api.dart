@@ -11,8 +11,8 @@ import '../values/tf_permission_names.dart';
 ///
 /// NOTE: If the user has Permanently Denied or Restricted the Permission,
 /// User will be promoted with App Settings (or App Info) Page to allow the permission.
-Future<Map<TfPermissionName, bool>> requestPermissions(
-    List<TfPermissionName> permissionsNames) async {
+Future<Map<TfPermissionName, bool>> requestPermissions({
+    required List<TfPermissionName> permissionsNames}) async {
   final results = <TfPermissionName, bool>{};
   for (final permissionName in permissionsNames) {
     final permissionInstance = _getPermissionForPermissionName(permissionName);
