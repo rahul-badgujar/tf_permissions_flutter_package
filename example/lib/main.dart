@@ -6,37 +6,8 @@ import 'package:tf_permissions/tf_permissions.dart';
 void main() {
   runApp(const MyApp());
 }
-
-class PermissionEventStreamer extends TfDataStreamer<int> {
-  int counter = 0;
-  Future<int> askForPermissions() async {
-    if (counter == 5) {
-      return -1;
-    }
-    Map<TfPermissionName, TfPermissionStatus> result =
-        await requestPermissions(permissionsNames: [
-      TfPermissionName.storage,
-      TfPermissionName.locationAlways,
-      TfPermissionName.camera
-    ]);
-    if (result.containsValue(TfPermissionStatus.denied)) {
-      counter++;
-      return await askForPermissions();
-    } else if (result.containsValue(TfPermissionStatus.permanentlyDenied) ||
-        result.containsValue(TfPermissionStatus.restricted)) {
-      return 0;
-    }
-    return 1;
-  }
-
-  @override
-  void reload() {
-    // -1 exit
-    // 0 refresh
-    // 1 success
-    askForPermissions().then((value) => addData(value));
-  }
-}
+int counter = 0;
+bool doReload = false;
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -61,17 +32,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  final permissionEventStreamer = PermissionEventStreamer();
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-    permissionEventStreamer.init();
+    askForPermissions().then((value){
+      if(value == -1){
+        Navigator.pop(context);
+      }
+    });
   }
 
   @override
   void dispose() {
-    permissionEventStreamer.dispose();
     WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
   }
@@ -79,8 +52,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      permissionEventStreamer.reload();
+    if(state == AppLifecycleState.paused){
+      doReload = true;
+    }
+    if (state == AppLifecycleState.resumed && doReload) {
+      doReload = false;
+      askForPermissions().then((value){
+        if(value == -1){
+          Navigator.pop(context);
+        }
+      });
     }
   }
 
@@ -88,34 +69,28 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Permissions Page')),
-      body: StreamBuilder<int>(
-        stream: permissionEventStreamer.stream,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final result = snapshot.data ?? 0;
-          if (result == -1) {
-            Navigator.pop(context);
-          } else if (result == 1) {
-            // redirect user
-          }
-          /* if (!r) {
-            return const Center(
-              child: Text("Permissions Denied"),
-            );
-          }
-          return const Center(
-            child: Text("Permissions Granted"),
-          ); */
-          return const SizedBox();
-        },
-      ),
+      body: const SizedBox(),
     );
+  }
+
+  Future<int> askForPermissions() async {
+    if (counter == 5) {
+      Navigator.pop(context);
+      return -1;
+    }
+    Map<TfPermissionName, TfPermissionStatus> result =
+    await requestPermissions(permissionsNames: [
+      TfPermissionName.storage,
+      TfPermissionName.locationAlways,
+      TfPermissionName.camera
+    ]);
+    if (result.containsValue(TfPermissionStatus.permanentlyDenied) ||
+        result.containsValue(TfPermissionStatus.restricted)) {
+      return 0;
+    } else if (result.containsValue(TfPermissionStatus.denied)) {
+      counter++;
+      return await askForPermissions();
+    }
+    return 1;
   }
 }

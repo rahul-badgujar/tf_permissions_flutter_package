@@ -19,6 +19,9 @@ Future<Map<TfPermissionName, TfPermissionStatus>> requestPermissions(
     final permissionInstance = _getPermissionForPermissionName(permissionName);
     final permissionAcceptanceStatus = await permissionInstance.request();
     results[permissionName] = permissionAcceptanceStatus;
+    if(permissionAcceptanceStatus == TfPermissionStatus.permanentlyDenied || permissionAcceptanceStatus == TfPermissionStatus.restricted){
+      break;
+    }
   }
   return results;
 }

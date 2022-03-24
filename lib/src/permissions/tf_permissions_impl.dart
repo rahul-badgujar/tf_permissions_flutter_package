@@ -1,3 +1,4 @@
+
 import 'package:app_settings/app_settings.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tf_permissions/src/values/tf_permission_status.dart';
@@ -32,12 +33,17 @@ abstract class TfPermissionBase {
     // CASE: Permission is restricted by user by purpose.
     final shouldPromptSettings =
         (await isPermanentlyDenied()) || (await isRestricted());
+
     if (shouldPromptSettings) {
       await openSettings();
       return TfPermissionStatus.permanentlyDenied;
     } else if (await isDenied()) {
       // CASE: Permission is just denied.
-      await permission.request();
+      PermissionStatus status = await permission.request();
+      if(status == PermissionStatus.permanentlyDenied){
+        await openSettings();
+        return TfPermissionStatus.permanentlyDenied;
+      }
     }
 
     // Return final status of permission status.
