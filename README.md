@@ -1,39 +1,79 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# tf_permissions
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+Get utility Widgets and Functions to deal with all the permissions your app requires collectively and all at once.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
+## Supported Flutter Versions
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Flutter SDK: >=1.17.0
 
-## Features
+## Installation
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+Add the Package
 
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  tf_permissions:
+    git:
+      url: https://github.com/rahul-badgujar/tf_permissions_flutter_package.git
+      ref: main
 ```
 
-## Additional information
+## How to use
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+Import the package in your dart file
+
+```dart
+import 'package:tf_permissions/tf_permissions.dart';
+```
+
+### TfPermissionsRequester Widget to Requests Permissions
+
+```dart
+TfPermissionsRequester(
+    // List of TfPermissionName you want to request.
+    permissionsRequired: const [
+        TfPermissionName.camera,
+        TfPermissionName.location,
+        TfPermissionName.storage,
+    ],
+    // Maximum attempts for user to accept all requests. 
+    attempts: 3,
+    // Callback to execute when all permissions are accepted by user.
+    onAcceptedAllPermissions: () {
+        // E.g., Navigating to Home Page.
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+            builder: ((context) => const HomePage()),
+            ),
+        );
+    },
+    // Callback to execute when user has excedeed maximum limits of attempts to accept requests.
+    onExceededAttempts: () {
+        // E.g., Closing the page
+        if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+        }
+    },
+    // Widget to show while asking for permissions.
+    child: const Scaffold(
+        body: Center(
+            child: Text("Asking For Permissions"),
+        ),
+    ),
+)
+```
+
+### Currently Supported TfPermissions
+
+- TfPermissionName.camera
+- TfPermissionName.location
+- TfPermissionName.locationAlways
+- TfPermissionName.storage
+
+Note: The widget throws UnimplementedError if implementation is not added for any of required permissions.
+
+### Additional Information
+
+- If the user has Permanently Denied or Restricted the Permission, User will be promoted with App Settings (or App Info) Page to allow the permission.
+- kept showing settings page if he keeps permanently denying permissions. If user keeps permanently denying permissions, the App Info Page will be kept showing undefinately.

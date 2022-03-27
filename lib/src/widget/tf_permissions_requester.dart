@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import '../../tf_permissions.dart';
-import '../api/tf_permissions_api.dart';
 
 class TfPermissionsRequester extends StatefulWidget {
   ///
@@ -12,6 +11,7 @@ class TfPermissionsRequester extends StatefulWidget {
   /// [attempts]: Maximum attempts for user to accept all requests. Defaults to 5. \
   /// [onAcceptedAllPermissions]: Callback to execute when all permissions are accepted by user. \
   /// [onExceededAttempts]: Callback to execute when user has excedeed maximum limits of attempts to accept requests. \
+  /// [child]: Widget to show while asking for permissions
   ///
   /// Throws: UnimplementedError if implementation is not added for any of required permissions.
   ///
@@ -40,7 +40,7 @@ class TfPermissionsRequester extends StatefulWidget {
   /// Callback to execute when user has excedeed maximum limits of attempts to accept requests.
   final Function onExceededAttempts;
 
-  /// Widget to show wile asking for permissions
+  /// Widget to show while asking for permissions.
   final Widget child;
 
   @override
