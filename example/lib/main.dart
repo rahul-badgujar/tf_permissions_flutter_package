@@ -34,6 +34,7 @@ class PermissionRequestWrapper extends StatelessWidget {
         TfPermissionName.locationAlways,
         TfPermissionName.storage,
       ],
+      attempts: 3,
       onAcceptedAllPermissions: () {
         Navigator.pushReplacement(
           context,
