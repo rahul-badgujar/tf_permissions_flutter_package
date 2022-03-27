@@ -95,3 +95,8 @@ class TfStoragePermission extends TfPermissionBase {
 class TfLocationAlwaysPermission extends TfPermissionBase {
   TfLocationAlwaysPermission() : super(permission: Permission.locationAlways);
 }
+
+/// Represents Location Permission.
+class TfLocationPermission extends TfPermissionBase {
+  TfLocationPermission() : super(permission: Permission.location);
+}

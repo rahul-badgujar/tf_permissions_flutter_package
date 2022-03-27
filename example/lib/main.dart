@@ -28,7 +28,7 @@ class PermissionRequestWrapper extends StatelessWidget {
     return TfPermissionsRequester(
       permissionsRequired: const [
         TfPermissionName.camera,
-        TfPermissionName.locationAlways,
+        TfPermissionName.location,
         TfPermissionName.storage,
       ],
       attempts: 3,
@@ -46,6 +46,11 @@ class PermissionRequestWrapper extends StatelessWidget {
           Navigator.pop(context);
         }
       },
+      child: const Scaffold(
+        body: Center(
+          child: Text("Asking For Permissions"),
+        ),
+      ),
     );
   }
 }

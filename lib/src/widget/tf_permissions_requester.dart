@@ -25,6 +25,7 @@ class TfPermissionsRequester extends StatefulWidget {
     this.attempts = 5,
     required this.onAcceptedAllPermissions,
     required this.onExceededAttempts,
+    this.child = const SizedBox(),
   }) : super(key: key);
 
   /// List of TfPermissionName you want to request.
@@ -38,6 +39,9 @@ class TfPermissionsRequester extends StatefulWidget {
 
   /// Callback to execute when user has excedeed maximum limits of attempts to accept requests.
   final Function onExceededAttempts;
+
+  /// Widget to show wile asking for permissions
+  final Widget child;
 
   @override
   State<TfPermissionsRequester> createState() => _TfPermissionsRequesterState();
@@ -89,7 +93,7 @@ class _TfPermissionsRequesterState extends State<TfPermissionsRequester>
     return Builder(
       builder: (context) {
         askForPermissions().then(_handlePermissionsAcceptanceResult);
-        return const SizedBox();
+        return widget.child;
       },
     );
   }
@@ -98,6 +102,7 @@ class _TfPermissionsRequesterState extends State<TfPermissionsRequester>
   void _handlePermissionsAcceptanceResult(int status) {
     if (status == PERMISSIONS_ACCEPTED_ALL) {
       widget.onAcceptedAllPermissions.call();
+      WidgetsBinding.instance?.removeObserver(this);
     } else if (status == PERMISSIONS_REQUEST_LIMIT_OUT) {
       widget.onExceededAttempts.call();
     }
@@ -105,7 +110,7 @@ class _TfPermissionsRequesterState extends State<TfPermissionsRequester>
 
   Future<int> askForPermissions() async {
     // CASE: user has exceeded the limit of chances to accept requests
-    if (attemptCounter >= widget.attempts) {
+    if (attemptCounter > widget.attempts) {
       return PERMISSIONS_REQUEST_LIMIT_OUT;
     }
     final result =
@@ -114,6 +119,7 @@ class _TfPermissionsRequesterState extends State<TfPermissionsRequester>
     // Continue this attempt
     if (result.containsValue(TfPermissionStatus.permanentlyDenied) ||
         result.containsValue(TfPermissionStatus.restricted)) {
+      attemptCounter++;
       return PERMISSIONS_RESTRICTED_SOME;
     }
     // CASE: If not all permissions are accepted, some are denied

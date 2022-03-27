@@ -38,6 +38,8 @@ TfPermissionBase _getPermissionForPermissionName(
       return TfStoragePermission();
     case TfPermissionName.locationAlways:
       return TfLocationAlwaysPermission();
+    case TfPermissionName.location:
+      return TfLocationPermission();
     default:
       throw UnimplementedError();
   }
