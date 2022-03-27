@@ -5,9 +5,6 @@ void main() {
   runApp(const MyApp());
 }
 
-int counter = 0;
-bool doReload = false;
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
