@@ -1,3 +1,4 @@
-## 0.0.1
+# 1.0.0
 
-* TODO: Describe initial release.
+* support for TfPermissionsRequester
+* support for API's to request multiple permissions
