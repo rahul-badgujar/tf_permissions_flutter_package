@@ -18,84 +18,54 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: const PermissionRequestWrapper(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class PermissionRequestWrapper extends StatelessWidget {
+  const PermissionRequestWrapper({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    return TfPermissionsRequester(
+      permissionsRequired: const [
+        TfPermissionName.camera,
+        TfPermissionName.locationAlways,
+        TfPermissionName.storage,
+      ],
+      onAcceptedAllPermissions: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: ((context) => const HomePage()),
+          ),
+        );
+      },
+      onExceededAttempts: () {
+        // Closing the page
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+      },
+    );
+  }
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance?.addObserver(this);
-    askForPermissions().then((value) {
-      if (value == -1) {
-        closePage(context);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.paused) {
-      doReload = true;
-    }
-    if (state == AppLifecycleState.resumed && doReload) {
-      doReload = false;
-      askForPermissions().then((value) {
-        if (value == -1) {
-          closePage(context);
-        }
-      });
-    }
-  }
-
-  void closePage(BuildContext context) {
-    if (Navigator.canPop(context)) {
-      Navigator.pop(context);
-    }
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Permissions Page')),
-      body: const SizedBox(),
+      appBar: AppBar(
+        title: const Text("Home Page"),
+      ),
+      body: const Center(
+        child: Text(
+          "All permissions accepted. Do your stuff here",
+        ),
+      ),
     );
-  }
-
-  Future<int> askForPermissions() async {
-    if (counter == 5) {
-      Navigator.pop(context);
-      return -1;
-    }
-    Map<TfPermissionName, TfPermissionStatus> result =
-        await requestPermissions(permissionsNames: [
-      TfPermissionName.storage,
-      TfPermissionName.locationAlways,
-      TfPermissionName.camera
-    ]);
-    if (result.containsValue(TfPermissionStatus.permanentlyDenied) ||
-        result.containsValue(TfPermissionStatus.restricted)) {
-      return 0;
-    } else if (result.containsValue(TfPermissionStatus.denied)) {
-      counter++;
-      return await askForPermissions();
-    }
-    return 1;
   }
 }
