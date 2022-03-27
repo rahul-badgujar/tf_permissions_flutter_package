@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:tf_data_streamer/tf_data_streamer.dart';
 import 'package:tf_permissions/tf_permissions.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
 int counter = 0;
 bool doReload = false;
 
@@ -36,9 +35,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-    askForPermissions().then((value){
-      if(value == -1){
-        Navigator.pop(context);
+    askForPermissions().then((value) {
+      if (value == -1) {
+        closePage(context);
       }
     });
   }
@@ -52,16 +51,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if(state == AppLifecycleState.paused){
+    if (state == AppLifecycleState.paused) {
       doReload = true;
     }
     if (state == AppLifecycleState.resumed && doReload) {
       doReload = false;
-      askForPermissions().then((value){
-        if(value == -1){
-          Navigator.pop(context);
+      askForPermissions().then((value) {
+        if (value == -1) {
+          closePage(context);
         }
       });
+    }
+  }
+
+  void closePage(BuildContext context) {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
     }
   }
 
@@ -79,7 +84,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       return -1;
     }
     Map<TfPermissionName, TfPermissionStatus> result =
-    await requestPermissions(permissionsNames: [
+        await requestPermissions(permissionsNames: [
       TfPermissionName.storage,
       TfPermissionName.locationAlways,
       TfPermissionName.camera
